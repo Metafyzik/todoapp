@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Todo list</title>
+    <script th:src="@{/js/script.js}" ></script>
+    <link rel="stylesheet"  th:href="@{/css/styles.css}" type="text/css">
+
+</head>
+<body>
+    <h1>TODO LIST</h1>
+    <table>
+        <thead>
+        <tr> <!-- Could this be also done by thymeleaf dynamically-->
+            <th>ID</th>
+            <th>TITLE</th>
+            <th>TASK</th>
+            <th>CREATED</th>
+            <th>ADJUSTED</th>
+            <th> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item, itemIndex : ${items}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.title}" th:id="${itemIndex.index} + 'title'"></td>
+            <td th:text="${item.task}" th:id="${itemIndex.index} + 'task'"></td>
+            <td th:text="${#temporals.format(item.created, 'dd MMM yyyy HH:mm')}"></td>
+            <td th:text="${item.adjusted == null} ? '' : ${#temporals.format(item.adjusted, 'dd MMM yyyy HH:mm')}"></td>
+            <td>
+                <button th:attr="onclick='deleteItem(' + ${item.id} + ')'" type="button">Delete</button>
+                <button th:attr="onclick='initializeFormForPut(' + ${item.id} + ',' + ${itemIndex.index} + ')'" type="button">Edit</button> <!--   DELETE th:id AFTER -->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Button to open the modal -->
+    <button class="open-modal-button" onclick="initializeFormForPOST()">Add new item</button>
+
+    <!-- Modal overlay with form -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <!-- Close button inside the modal -->
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div id="error"></div>
+            <h3>Submit Your Information</h3>
+            <form>
+
+                <label for="title">title:</label>
+                <input maxlength="20" placeholder="Enter up to 20 characters" type="text" id="title" name="title" >
+                <br><br>
+
+                <label for="task">task:</label>
+                <textarea id="task" name="task" rows="4" cols="50"></textarea>
+                <br><br>
+
+                <button onclick="formButtonClicked()" type="button" id="formButton">submit</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
