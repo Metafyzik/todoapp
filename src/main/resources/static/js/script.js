@@ -14,10 +14,24 @@ function deleteItem(id, next_var) {
         if (!response.ok) {
             throw new Error("Network response was not ok " + response.statusText);
         } else {
-            console.log("item deleted");
-            location.reload();
+            console.log("item deleted")
+            return response.text();
         }
     })
+    .then(htmlString => {
+        newTableData(htmlString); // Raw HTML as a string
+        closeModal();
+    })
+    .catch(error => {
+        console.error('Error fetching the HTML:', error);
+    });
+}
+
+// Function to close the modal
+function closeModal() {
+    deleteFormText();
+    deleteErrorMessages();
+    document.getElementById("modal").style.display = "none";
 }
 
 function addItem() {
@@ -31,7 +45,6 @@ function addItem() {
 
     if (title === '' ) {
         messages.push("Title is required");
-        console.log("title empt");
     }
     if (task === '') {
         messages.push("Task is required");
@@ -53,12 +66,27 @@ function addItem() {
                 throw new Error("Network response was not ok " + response.statusText);
             } else {
                 console.log("item added");
-                location.reload();
+                return response.text();
             }
+        }).then(htmlString => {
+            newTableData(htmlString); // Raw HTML as a string
+            closeModal();
         })
+            .catch(error => {
+            console.error('Error fetching the HTML:', error);
+        });
     } else {
         errorElement.innerText = messages.join(',');
     }
+
+    //close modal after
+}
+
+function newTableData(htmlReponse){
+    //erase current tbody content
+    const tableBody = document.querySelector('#item-table tbody');
+    tableBody.innerHTML = htmlReponse;
+
 }
 
 function openModal() {
@@ -85,14 +113,6 @@ function initializeFormForPOST() {
 }
 
 
-
-// Function to close the modal
-function closeModal() {
-    deleteFormText();
-    deleteErrorMessages();
-    document.getElementById("modal").style.display = "none";
-}
-
 // Close the modal if the user clicks outside of it
 window.onclick = function(event) {
   var modal = document.getElementById("modal");
@@ -105,8 +125,6 @@ function deleteErrorMessages() {
     const errorElement = document.getElementById("error");
     errorElement.innerText ='';
 }
-
-
 
 function adjustItem(id) {
 
@@ -151,9 +169,17 @@ function adjustItem(id) {
                 throw new Error("Network response was not ok " + response.statusText);
             } else {
                 console.log("item adjusted");
-                location.reload();
+                return response.text();
             }
         })
+        .then(htmlString => {
+                newTableData(htmlString); // Raw HTML as a string
+                closeModal();
+        })
+        .catch(error => {
+            console.error('Error fetching the HTML:', error);
+        });
+
     } else {
         errorElement.innerText = messages.join(',');
     }

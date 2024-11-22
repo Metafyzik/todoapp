@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
-
 public class ItemRepository {
 
     List<Item> itemList = new ArrayList<>();
@@ -36,8 +35,6 @@ public class ItemRepository {
         else {
             System.out.println("There exist no such item with that id.");
         }
-
-
 
     }
 

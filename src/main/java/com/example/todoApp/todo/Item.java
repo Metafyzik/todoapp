@@ -1,13 +1,24 @@
 package com.example.todoApp.todo;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
+@Entity
 public class Item {
-    Integer id;
-    String title;
-    LocalDateTime created;
-    LocalDateTime adjusted;
-    String task;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    @Size(min = 2, max = 25, message = "Title must be between 2 and 25 characters")
+    private String title;
+    private LocalDateTime created;
+    private LocalDateTime adjusted;
+    @Size(min = 2, max = 500, message = "Task must be between 2 and 500 characters")
+    private String task;
 
     static Integer numberOfObjects = 0;
 

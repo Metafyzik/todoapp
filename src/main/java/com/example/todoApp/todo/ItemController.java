@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,24 +34,16 @@ public class ItemController {
         return "index";
     }
 
-    /*
-    @ResponseStatus(HttpStatus.CREATED)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public void addItem (@RequestBody Item item) {
-        //TODO add check if properly json contains proper data
-        itemRepo.addItem(item);
-    }
-    */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping()
-    public void addItem (@RequestBody Item newItem)
+    public String addItem (@Valid @RequestBody Item newItem, Model model)
     {
         newItem.setCreated(LocalDateTime.now());
         newItem.setId(Item.numberOfObjects);
 
         itemRepo.addItem(newItem);
         //TODO add id automatically
+        //TODO add check if properly json contains proper data
         //process json
         /*
         Gson gson = new Gson();
@@ -62,14 +55,16 @@ public class ItemController {
 
         //jsonObject.
         //System.out.println("Email: " + task);
+        List<Item> items = itemRepo.findAll();
+        model.addAttribute("items",items);
 
-        //itemRepo.addItem(item);
+
+        return "fragment :: table-content";
     }
 
-    //TODO add putmethod
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+
     @PutMapping()
-    public void adjustItem(@RequestBody String jsonString) {
+    public String adjustItem(@RequestBody String jsonString, Model model) {
 
         JsonParser parser = new JsonParser();
         JsonElement rootNode = parser.parse(jsonString);
@@ -96,26 +91,20 @@ public class ItemController {
             //TODO throws adequate response
         }
 
-
-
-       // itemRepo.findById()
+        List<Item> items = itemRepo.findAll();
+        model.addAttribute("items",items);
+        return "fragment :: table-content";
     }
 
-
-
-
-
-
-
-
-
-
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable Integer id) {
+    public String deleteItem(@PathVariable Integer id, Model model) {
         //TODO add check if an item with such id is present
         itemRepo.deleteItem(id);
+
+        List<Item> items = itemRepo.findAll();
+        model.addAttribute("items",items);
+        return "fragment :: table-content";
     }
 
 

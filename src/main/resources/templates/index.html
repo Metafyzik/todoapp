@@ -10,7 +10,7 @@
 </head>
 <body>
     <h1>TODO LIST</h1>
-    <table>
+    <table id="item-table" th:fragment="table" xmlns:th="http://www.w3.org/1999/xhtml">
         <thead>
         <tr> <!-- Could this be also done by thymeleaf dynamically-->
             <th>ID</th>
@@ -21,20 +21,10 @@
             <th> </th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="item, itemIndex : ${items}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.title}" th:id="${itemIndex.index} + 'title'"></td>
-            <td th:text="${item.task}" th:id="${itemIndex.index} + 'task'"></td>
-            <td th:text="${#temporals.format(item.created, 'dd MMM yyyy HH:mm')}"></td>
-            <td th:text="${item.adjusted == null} ? '' : ${#temporals.format(item.adjusted, 'dd MMM yyyy HH:mm')}"></td>
-            <td>
-                <button th:attr="onclick='deleteItem(' + ${item.id} + ')'" type="button">Delete</button>
-                <button th:attr="onclick='initializeFormForPut(' + ${item.id} + ',' + ${itemIndex.index} + ')'" type="button">Edit</button> <!--   DELETE th:id AFTER -->
-            </td>
-        </tr>
-        </tbody>
+        <div th:insert="~{fragment :: table-content}"></div>
+
     </table>
+
 
     <!-- Button to open the modal -->
     <button class="open-modal-button" onclick="initializeFormForPOST()">Add new item</button>
@@ -49,11 +39,11 @@
             <form>
 
                 <label for="title">title:</label>
-                <input maxlength="20" placeholder="Enter up to 20 characters" type="text" id="title" name="title" >
+                <input maxlength="25" placeholder="Enter up to 20 characters" type="text" id="title" name="title" >
                 <br><br>
 
                 <label for="task">task:</label>
-                <textarea id="task" name="task" rows="4" cols="50"></textarea>
+                <textarea id="task" name="task" rows="4" cols="50" maxlength="500"></textarea>
                 <br><br>
 
                 <button onclick="formButtonClicked()" type="button" id="formButton">submit</button>

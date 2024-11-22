@@ -1,13 +1,17 @@
-<!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-</head>
-<body>
-<tr th:fragment="test-delete" >
-    <td> dada</td>
-</tr>
-</body>
+<!-- fragment.html -->
+
+
+<tbody th:fragment="table-content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <tr th:each="item, itemIndex : ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.title}" th:id="${itemIndex.index} + 'title'"></td>
+        <td th:text="${item.task}" th:id="${itemIndex.index} + 'task'"></td>
+        <td th:text="${#temporals.format(item.created, 'dd MMM yyyy HH:mm')}"></td>
+        <td th:text="${item.adjusted == null} ? '' : ${#temporals.format(item.adjusted, 'dd MMM yyyy HH:mm')}"></td>
+        <td>
+            <button th:attr="onclick='deleteItem(' + ${item.id} + ')'" type="button">Delete</button>
+            <button th:attr="onclick='initializeFormForPut(' + ${item.id} + ',' + ${itemIndex.index} + ')'" type="button">Edit</button> <!--   DELETE th:id AFTER -->
+        </td>
+    </tr>
+</tbody>
+
