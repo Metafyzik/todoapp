@@ -15,12 +15,4 @@ public class TodoAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TodoAppApplication.class, args);
 	}
-
-	@Bean
-	CommandLineRunner runner() {
-		return args -> {
-			Item item = new Item(1,"test", LocalDateTime.now(),null,"testing stuff out");
-			System.out.println(item);
-		};
-	}
 }

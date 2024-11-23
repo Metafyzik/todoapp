@@ -1,6 +1,5 @@
 package com.example.todoApp.todo;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -28,37 +26,20 @@ public class ItemController {
 
     @GetMapping()
     public String findAll(Model model){
-        List<Item> items = itemRepo.findAll();
 
-        model.addAttribute("items",items);
+        model.addAttribute("items",itemRepo.findAll());
         return "index";
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public String addItem (@Valid @RequestBody Item newItem, Model model)
+    public String addItem (@Valid @RequestBody Item newItem, Model model) // TODO what does valid actually do here?
     {
-        newItem.setCreated(LocalDateTime.now());
-        newItem.setId(Item.numberOfObjects);
-
-        itemRepo.addItem(newItem);
-        //TODO add id automatically
         //TODO add check if properly json contains proper data
-        //process json
-        /*
-        Gson gson = new Gson();
-        gson.fromJson(jsonObject,String.class);
+        newItem.setCreated(LocalDateTime.now());
+        itemRepo.save(newItem);
 
-        item.created(LocalDateTime.now());
-        System.out.println(item);
-        */
-
-        //jsonObject.
-        //System.out.println("Email: " + task);
-        List<Item> items = itemRepo.findAll();
-        model.addAttribute("items",items);
-
-
+        model.addAttribute("items",itemRepo.findAll());
         return "fragment :: table-content";
     }
 
@@ -66,6 +47,8 @@ public class ItemController {
     @PutMapping()
     public String adjustItem(@RequestBody String jsonString, Model model) {
 
+        //TODO add check if properly json contains proper data
+        //TODO should this "logic" by in a controller?
         JsonParser parser = new JsonParser();
         JsonElement rootNode = parser.parse(jsonString);
         JsonObject details = rootNode.getAsJsonObject();
@@ -74,53 +57,31 @@ public class ItemController {
         String title = details.get("title").getAsString();
         String task = details.get("task").getAsString();
 
-        System.out.println(id + title + task);
 
-        //find item to ajdust
-        //Optional<Item> itemToAdjust = itemRepo.findById(id);
-
-        if( itemRepo.findById(id).isPresent()) {
+        if(itemRepo.findById(id).isPresent()) {
             Item itemToAdjust = itemRepo.findById(id).get();
 
             itemToAdjust.setAdjusted(LocalDateTime.now());
             itemToAdjust.setTask(task);
             itemToAdjust.setTitle(title);
-            //itemToAdjust.set
+
+            itemRepo.save(itemToAdjust);
         } else {
             System.out.println("Item with id: " + id + "not found in the system.");
             //TODO throws adequate response
         }
+        //itemRepo.
 
-        List<Item> items = itemRepo.findAll();
-        model.addAttribute("items",items);
+        model.addAttribute("items",itemRepo.findAll());
         return "fragment :: table-content";
     }
 
-    //@ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public String deleteItem(@PathVariable Integer id, Model model) {
         //TODO add check if an item with such id is present
-        itemRepo.deleteItem(id);
+        itemRepo.deleteById(id);
 
-        List<Item> items = itemRepo.findAll();
-        model.addAttribute("items",items);
+        model.addAttribute("items",itemRepo.findAll());
         return "fragment :: table-content";
     }
-
-
-
-    /*
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/")
-    public String deleteItem(Model model) {
-        //TODO add check if an item with such id is present
-        //itemRepo.deleteItem(id);
-        System.out.println("DELETE METHOD CALLED");
-        return "index"; // :: test-delete";
-    }
-    */
-
-
-
-
 }
