@@ -19,22 +19,13 @@ public class Item {
     @Size(min = 2, max = 500, message = "Task must be between 2 and 500 characters")
     private String task;
 
-    static Integer numberOfObjects = 0;
-
     public Item(Integer id, String title, LocalDateTime created, LocalDateTime adjusted, String task) {
         this.id = id;
         this.title = title;
         this.created = created;
         this.adjusted = adjusted;
         this.task = task;
-
-        newObjectCreated();
     }
-
-    static void newObjectCreated () {
-        numberOfObjects += 1;
-    }
-
 
     public void setId(Integer id) {
         this.id = id;
