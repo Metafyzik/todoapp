@@ -40,6 +40,7 @@ public class ItemController {
         itemRepo.save(newItem);
 
         model.addAttribute("items",itemRepo.findAll());
+
         return "fragment :: table-content";
     }
 
