@@ -3,7 +3,7 @@
 
 <tbody th:fragment="table-content" xmlns:th="http://www.w3.org/1999/xhtml">
     <tr th:each="item, itemIndex : ${items}">
-        <td th:text="${item.id}"></td>
+        <td th:text="${itemIndex.index + 1}"></td>
         <td th:text="${item.title}" th:id="${itemIndex.index} + 'title'"></td>
         <td th:text="${item.task}" th:id="${itemIndex.index} + 'task'"></td>
         <td th:text="${#temporals.format(item.created, 'dd MMM yyyy HH:mm')}"></td>
