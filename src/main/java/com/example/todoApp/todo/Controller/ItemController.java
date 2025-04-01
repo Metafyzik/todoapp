@@ -3,9 +3,6 @@ package com.example.todoApp.todo.Controller;
 
 import com.example.todoApp.todo.Entity.Item;
 import com.example.todoApp.todo.Repository.ItemRepository;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -48,34 +45,13 @@ public class ItemController {
 
 
     @PutMapping()
-    public String adjustItem(@RequestBody String jsonString, Model model) {
+    public String adjustmentItem(@Valid @RequestBody Item itemAdjustement, Model model) {
 
-        //TODO add check if properly json contains proper data
-        //TODO should this "logic" by in a controller?
-        JsonParser parser = new JsonParser();
-        JsonElement rootNode = parser.parse(jsonString);
-        JsonObject details = rootNode.getAsJsonObject();
-
-
-
-        Integer id = details.get("id").getAsInt();
-        String title = details.get("title").getAsString();
-        String task = details.get("task").getAsString();
-
-
-        if(itemRepo.findById(id).isPresent()) {
-            Item itemToAdjust = itemRepo.findById(id).get();
-
-            itemToAdjust.setAdjusted(LocalDateTime.now());
-            itemToAdjust.setTask(task);
-            itemToAdjust.setTitle(title);
-
-            itemRepo.save(itemToAdjust);
-        } else {
-            System.out.println("Item with id: " + id + "not found in the system.");
-            //TODO throws adequate response
-        }
-        //itemRepo.
+        Item ItemToAdjust = itemRepo.findById(itemAdjustement.getId()).get();
+        ItemToAdjust.setTitle(itemAdjustement.getTitle());
+        ItemToAdjust.setTask(itemAdjustement.getTask());
+        ItemToAdjust.setAdjusted(LocalDateTime.now());
+        itemRepo.save(ItemToAdjust);
 
         model.addAttribute("items",itemRepo.findAll());
         return "fragment :: table-content";
