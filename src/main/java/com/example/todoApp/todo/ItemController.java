@@ -1,5 +1,7 @@
 package com.example.todoApp.todo;
 
+
+import com.example.todoApp.todo.Repository.ItemRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -10,23 +12,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class ItemController {
 
-    private final ItemRepository itemRepo;
 
+    private final ItemRepository itemRepo;
 
     public ItemController(ItemRepository itemRepo) {
         this.itemRepo = itemRepo;
     }
 
-
     @GetMapping()
     public String findAll(Model model){
 
+        //ItemController itemRepo = ItemRepository;
         model.addAttribute("items",itemRepo.findAll());
         return "index";
     }
