@@ -1,4 +1,4 @@
-package com.example.todoApp.todo.Repostiory;
+package com.example.todoApp.todo.Repository;
 
 import com.example.todoApp.todo.Item;
 import org.springframework.data.repository.ListCrudRepository;
