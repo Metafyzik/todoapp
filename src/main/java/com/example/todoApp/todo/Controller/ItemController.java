@@ -1,6 +1,5 @@
 package com.example.todoApp.todo.Controller;
 
-
 import com.example.todoApp.todo.Entity.Item;
 import com.example.todoApp.todo.Repository.ItemRepository;
 import jakarta.validation.Valid;
@@ -8,13 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/")
 public class ItemController {
-
 
     private final ItemRepository itemRepo;
 
@@ -25,7 +22,6 @@ public class ItemController {
     @GetMapping()
     public String findAll(Model model){
 
-        //ItemController itemRepo = ItemRepository;
         model.addAttribute("items",itemRepo.findAll());
         return "index";
     }
@@ -42,7 +38,6 @@ public class ItemController {
 
         return "fragment :: table-content";
     }
-
 
     @PutMapping()
     public String adjustmentItem(@Valid @RequestBody Item itemAdjustement, Model model) {
